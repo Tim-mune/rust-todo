@@ -1,3 +1,7 @@
+// to do app
+mod todo;
+use todo::enums;
 fn main() {
-    println!("Hello, world!");
+    let done_task=enums::TaskStatus::DONE;
+    print!("{}",done_task)
 }

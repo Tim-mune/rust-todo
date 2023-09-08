@@ -1,4 +1,4 @@
-use actix_web::{web,HttpServer,HttpResponse,HttpRequest, Responder,App};
+use actix_web::{web,HttpServer, Responder,App};
 use  std::io;
 
 
@@ -12,6 +12,7 @@ format!("home route")
 
 #[actix_web::main]
 async fn main()->io::Result<()>{
-  let app=move|| App::new().configure(route_handlers);
+  let app=move|| 
+    App::new().configure(route_handlers);
   HttpServer::new(app).bind("127.0.0.1:3000")?.run().await
 }

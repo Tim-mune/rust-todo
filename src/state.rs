@@ -1,5 +1,5 @@
 use super::models::Todo;
-
-pub struct AppState{
-    todo_items:Vec<Todo>,
+use std::sync::Mutex;
+pub struct AppState {
+    pub todo_items: Mutex<Vec<Todo>>,
 }

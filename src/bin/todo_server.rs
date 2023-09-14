@@ -1,30 +1,26 @@
-use actix_web::{web,HttpServer, Responder,App,};
-use  std::{io};
-
-#[path="../models.rs"]
-mod models;
-#[path="../state.rs"]
-mod state;
-#[path="../handlers.rs"]
+use actix_web::{web, App, HttpServer, Responder};
+use std::io;
+use std::sync::Mutex;
+#[path = "../handlers.rs"]
 mod handlers;
-#[path="../routes.rs"]
+#[path = "../models.rs"]
+mod models;
+#[path = "../routes.rs"]
 mod routes;
-
+#[path = "../state.rs"]
+mod state;
 use routes::to_do_routes;
-
-
-fn route_handlers(cfg:&mut web::ServiceConfig){
-    cfg.route("/todo",web::get().to(home_route));
-}
-
-async fn home_route()->impl Responder{
-format!("home todo")
-}
+use state::AppState;
 
 #[actix_web::main]
-async fn main()->io::Result<()>{
-  let app=move ||{
-    App::new().app_data("hey").configure(route_handlers).configure(to_do_routes)
-  };
-  HttpServer::new(app).bind("127.0.0.1:3000")?.run().await
+async fn main() -> io::Result<()> {
+    let app = move || {
+        let shared_data = web::Data::new(AppState {
+            todo_items: Mutex::new(vec![]),
+        });
+        App::new()
+            .app_data(shared_data.clone())
+            .configure(to_do_routes)
+    };
+    HttpServer::new(app).bind("127.0.0.1:3000")?.run().await
 }
